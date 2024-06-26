@@ -1,0 +1,12 @@
+name: company_rest
+services:
+  libraryDB:
+    image: "mysql:8.0"
+    container_name: "mysql"
+    ports:
+      - "7002:3306"
+    environment:
+      - "MYSQL_ROOT_PASSWORD=test"
+    volumes:
+      - "./sql/script.sql:/docker-entrypoint-initdb.d/1.sql"
+      - "./sql/:/test/"
