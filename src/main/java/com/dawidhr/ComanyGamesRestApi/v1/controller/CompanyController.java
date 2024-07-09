@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
 @RestController()
@@ -30,27 +30,32 @@ public class CompanyController {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/")
-    public List<CompanyList> gatAllCompanies() {
-        return companyService.getAllCompanyNamesAndIds();
+    @GetMapping({"/", ""})
+    public ResponseEntity<Collection<CompanyList>> gatAllCompanies() {
+        return ResponseEntity.status(HttpStatus.OK).body(companyService.getAllCompanyNamesAndIds());
     }
 
     @GetMapping("/{id}")
-    public Company getCompanyById(@PathVariable("id") long id) {
+    public ResponseEntity<Company> getCompanyById(@PathVariable("id") long id) {
         Company company = companyService.getCompanyById(id);
-        return company;
+        return ResponseEntity.status(HttpStatus.OK).body(company);
     }
 
     @PostMapping("/")
-    public void createCompany(@RequestBody Company company) {
-        companyService.save(company);
-        return;
+    public ResponseEntity<Company> createCompany(@RequestBody Company company) {
+        Company companyFromDb = companyService.findCompanyByName(company.getName());
+        if (companyFromDb == null) {
+            companyService.save(company);
+            companyFromDb = companyService.findCompanyByName(company.getName());
+            return ResponseEntity.status(HttpStatus.CREATED).body(companyFromDb);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @GetMapping("/{id}/games")
-    public Set<String> getCompanyGames(@PathVariable("id") long id) {
+    public ResponseEntity<Collection<String>> getCompanyGames(@PathVariable("id") long id) {
         Set<String> games = companyService.getGames(id);
-        return games;
+        return ResponseEntity.status(HttpStatus.OK).body(games);
     }
 
 }

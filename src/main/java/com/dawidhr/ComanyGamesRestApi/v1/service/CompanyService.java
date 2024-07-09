@@ -51,4 +51,8 @@ public class CompanyService {
         companyRepository.save(company);
     }
 
+    public Company findCompanyByName(String name) {
+        return companyRepository.findAll().stream().filter(company -> {return company.getName().equals(name);}).findFirst().orElse(null);
+    }
+
 }
