@@ -41,7 +41,7 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(company);
     }
 
-    @PostMapping("/")
+    @PostMapping({"/", ""})
     public ResponseEntity<Company> createCompany(@RequestBody Company company) {
         Company companyFromDb = companyService.findCompanyByName(company.getName());
         if (companyFromDb == null) {
