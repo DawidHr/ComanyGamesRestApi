@@ -52,7 +52,7 @@ public class CompanyService {
     }
 
     public Company findCompanyByName(String name) {
-        return companyRepository.findAll().stream().filter(company -> {return company.getName().equals(name);}).findFirst().orElse(null);
+        return companyRepository.findAll().stream().filter(company -> company.getName().equals(name)).findFirst().orElse(null);
     }
 
 }
